@@ -16,10 +16,6 @@ Time Complexity:
 
 Space Complexity:
 - O(1) since it sorts in place.
-
-This version includes:
-1. selection_sort_verbose() -> shows each comparison and swap step by step.
-2. selection_sort() -> a clean version without print statements.
 """
 
 
