@@ -4,18 +4,18 @@ Selection Sort Algorithm
 Selection Sort is a simple comparison based sorting algorithm.
 
 How it works:
-It divides the list into a sorted and an unsorted portion.
-It repeatedly finds the smallest element in the unsorted portion.
-It swaps that element with the first unsorted position.
-The sorted portion grows from left to right.
+- It divides the list into a sorted portion and an unsorted portion.
+- It repeatedly finds the smallest element from the unsorted portion.
+- It swaps that element with the first unsorted position.
+- The sorted portion grows one element at a time from the beginning.
 
 Time Complexity:
-Worst Case: O(n^2)
-Average Case: O(n^2)
-Best Case: O(n^2)
+- Worst Case: O(n^2)
+- Average Case: O(n^2)
+- Best Case: O(n^2)
 
 Space Complexity:
-O(1) because it sorts in place.
+- O(1) since it sorts in place.
 
 This version includes:
 1. selection_sort_verbose() -> shows each comparison and swap step by step.
