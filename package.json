@@ -1,0 +1,27 @@
+{
+  "name": "python-algorithms",
+  "version": "1.0.0",
+  "description": "python-algorithms is a collection of algorithm implementations I built to better understand how they work in practice. It includes sorting, searching, and pathfinding algorithms, along with small benchmarking tools to compare their behavior.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "npx tsc",
+    "watch": "npx tsc -w"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/diputs-sudo/python-algorithms.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/diputs-sudo/python-algorithms/issues"
+  },
+  "homepage": "https://github.com/diputs-sudo/python-algorithms#readme",
+  "devDependencies": {
+    "serve": "^14.2.5",
+    "typescript": "^5.9.3"
+  }
+}
