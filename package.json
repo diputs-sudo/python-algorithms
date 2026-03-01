@@ -21,7 +21,7 @@
   },
   "homepage": "https://github.com/diputs-sudo/python-algorithms#readme",
   "devDependencies": {
-    "serve": "^14.2.5",
+    "serve": "^13.0.4",
     "typescript": "^5.9.3"
   }
 }
