@@ -380,3 +380,81 @@ html {
 .speed-control input[type="range"] {
     width: 200px;
 }
+
+.top-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 30px 0 30px;
+}
+
+.back-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    height: 2.6em;
+    padding: 0 14px;
+    background: #161b22;
+    border: 1px solid #30363d;
+    border-radius: 8px;
+    color: #e6edf3;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 0.85rem;
+}
+
+.back-btn svg {
+    fill: #8b949e;
+    transition: transform 0.25s ease, fill 0.25s ease;
+}
+
+.back-btn:hover {
+    border-color: #58a6ff;
+    box-shadow: 0 0 10px rgba(88, 166, 255, 0.25);
+}
+
+.back-btn:hover svg {
+    transform: translateX(-4px);
+    fill: #58a6ff;
+}
+
+.github-btn {
+    width: 45px;
+    height: 45px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    text-decoration: none;
+}
+
+.github-btn .svgContainer {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #161b22;
+    border: 1px solid #30363d;
+    border-radius: 10px;
+    transition: all 0.3s ease;
+}
+
+.github-btn .BG {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: #0f1117;
+    border-radius: 10px;
+    z-index: -1;
+    transition: all 0.3s ease;
+}
+
+.github-btn:hover .svgContainer {
+    border-color: #58a6ff;
+    box-shadow: 0 0 12px rgba(88, 166, 255, 0.3);
+}
+
+.github-btn:hover .BG {
+    transform: rotate(20deg);
+}
