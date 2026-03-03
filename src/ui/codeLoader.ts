@@ -19,12 +19,11 @@ export function initCodeLoader(category: string, algorithmName: string) {
             }
 
             const text = await response.text();
-
             const { header, body } = extractHeaderComment(text, language);
 
             injectHeaderIntoMoreInfo(header);
 
-            codeDisplay.innerHTML = highlightCode(body);
+            codeDisplay.innerHTML = highlightCode(body, language);
 
         } catch {
             codeDisplay.textContent = "Error loading file.";
@@ -78,7 +77,7 @@ function getExtension(language: string): string {
         c: "c"
     };
 
-    return extensions[language];
+    return extensions[language] ?? language;
 }
 
 function injectHeaderIntoMoreInfo(header: string) {
@@ -100,7 +99,7 @@ function injectHeaderIntoMoreInfo(header: string) {
     moreInfo.textContent = cleaned;
 }
 
-function highlightCode(code: string): string {
+function highlightCode(code: string, language: string): string {
 
     const keywords = new Set([
         "for","while","if","else","return",
@@ -127,14 +126,29 @@ function highlightCode(code: string): string {
             if (line[i] === '"' || line[i] === "'") {
                 const quote = line[i];
                 let j = i + 1;
-                while (j < line.length && line[j] !== quote) j++;
+
+                while (j < line.length) {
+                    if (line[j] === "\\" && j + 1 < line.length) {
+                        j += 2;
+                        continue;
+                    }
+                    if (line[j] === quote) break;
+                    j++;
+                }
+
                 const str = line.slice(i, j + 1);
                 result += `<span class="code-string">${escapeHTML(str)}</span>`;
                 i = j + 1;
                 continue;
             }
 
-            if (line.slice(i).startsWith("//") || line.slice(i).startsWith("#")) {
+            if (language === "python" && line.slice(i).startsWith("#")) {
+                const comment = line.slice(i);
+                result += `<span class="code-comment">${escapeHTML(comment)}</span>`;
+                break;
+            }
+
+            if (language !== "python" && line.slice(i).startsWith("//")) {
                 const comment = line.slice(i);
                 result += `<span class="code-comment">${escapeHTML(comment)}</span>`;
                 break;
