@@ -13,7 +13,7 @@ export function initCodeLoader(category: string, algorithmName: string) {
             const path = buildPath(language, category, algorithmName);
             const response = await fetch(path);
 
-            if (!response.ok) {
+            if (!response.ok) { 
                 codeDisplay.textContent = "File not found.";
                 return;
             }
