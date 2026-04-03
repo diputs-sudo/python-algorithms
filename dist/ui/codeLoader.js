@@ -1,24 +1,31 @@
 import { extractHeaderComment } from "../parsers/headerParser.js";
-export function initCodeLoader(category, algorithmName) {
-    const codeDisplay = document.getElementById("codeDisplay");
-    const langButtons = document.querySelectorAll(".lang-btn");
+export function initCodeLoader(category, algorithmName, options) {
+    const { rootSelector, variant, defaultLanguage = "python", moreInfoSelector } = options;
+    const root = document.querySelector(rootSelector);
+    if (!root)
+        return;
+    const codeDisplay = root.querySelector(".code-display-target");
+    const langButtons = root.querySelectorAll(".lang-btn");
     if (!codeDisplay || langButtons.length === 0)
         return;
+    const codeDisplayEl = codeDisplay;
     async function loadCode(language) {
         try {
-            const path = buildPath(language, category, algorithmName);
+            const path = buildPath(language, category, variant, algorithmName);
             const response = await fetch(path);
             if (!response.ok) {
-                codeDisplay.textContent = "File not found.";
+                codeDisplayEl.textContent = "File not found.";
                 return;
             }
             const text = await response.text();
             const { header, body } = extractHeaderComment(text, language);
-            injectHeaderIntoMoreInfo(header);
-            codeDisplay.innerHTML = highlightCode(body, language);
+            if (moreInfoSelector) {
+                injectHeaderIntoMoreInfo(header, moreInfoSelector);
+            }
+            codeDisplayEl.innerHTML = highlightCode(body, language);
         }
         catch {
-            codeDisplay.textContent = "Error loading file.";
+            codeDisplayEl.textContent = "Error loading file.";
         }
     }
     langButtons.forEach(btn => {
@@ -29,8 +36,54 @@ export function initCodeLoader(category, algorithmName) {
             loadCode(lang);
         });
     });
-    loadCode("python");
-    initCopyButton();
+    loadCode(defaultLanguage);
+    initCopyButton(root);
+}
+export async function copyText(text) {
+    if (navigator.clipboard?.writeText) {
+        try {
+            await navigator.clipboard.writeText(text);
+            return;
+        }
+        catch {
+            // Fall back to a selection-based copy path below.
+        }
+    }
+    const textArea = document.createElement("textarea");
+    textArea.value = text;
+    textArea.setAttribute("readonly", "true");
+    textArea.style.position = "fixed";
+    textArea.style.opacity = "0";
+    textArea.style.pointerEvents = "none";
+    document.body.appendChild(textArea);
+    textArea.focus();
+    textArea.select();
+    try {
+        document.execCommand("copy");
+    }
+    finally {
+        document.body.removeChild(textArea);
+    }
+}
+export function showCopySuccess(copyBtn) {
+    const tooltip = copyBtn.querySelector(".tooltip");
+    const resetDelayMs = 3000;
+    copyBtn.classList.add("copied");
+    if (tooltip) {
+        tooltip.setAttribute("data-text-initial", "Copied!");
+    }
+    const existingTimeout = copyBtn.dataset.copyResetTimeout;
+    if (existingTimeout) {
+        window.clearTimeout(Number(existingTimeout));
+    }
+    const timeoutId = window.setTimeout(() => {
+        copyBtn.classList.remove("copied");
+        if (tooltip) {
+            tooltip.setAttribute("data-text-initial", "Copy to clipboard");
+        }
+        delete copyBtn.dataset.copyResetTimeout;
+    }, resetDelayMs);
+    copyBtn.dataset.copyResetTimeout = String(timeoutId);
 }
 function toPascalCase(name) {
     return name
@@ -38,13 +91,13 @@ function toPascalCase(name) {
         .map(word => word.charAt(0).toUpperCase() + word.slice(1))
         .join("");
 }
-function buildPath(language, category, algorithmName) {
+function buildPath(language, category, variant, algorithmName) {
     const extension = getExtension(language);
     let fileName = algorithmName;
     if (language === "java") {
         fileName = toPascalCase(algorithmName);
     }
-    return new URL(`../../${language}/${category}/algorithm/${fileName}.${extension}`, window.location.href).href;
+    return new URL(`../../${language}/${category}/${variant}/${fileName}.${extension}`, window.location.href).href;
 }
 function getExtension(language) {
     const extensions = {
@@ -55,8 +108,8 @@ function getExtension(language) {
     };
     return extensions[language] ?? language;
 }
-function injectHeaderIntoMoreInfo(header) {
-    const moreInfo = document.querySelector(".more-info-content");
+function injectHeaderIntoMoreInfo(header, selector) {
+    const moreInfo = document.querySelector(selector);
     if (!moreInfo)
         return;
     if (!header) {
@@ -66,10 +119,48 @@ function injectHeaderIntoMoreInfo(header) {
     const cleaned = header
         .replace(/\/\*|\*\//g, "")
         .replace(/"""/g, "")
+        .replace(/^\s*\*\s?/gm, "")
         .trim();
-    moreInfo.textContent = cleaned;
+    moreInfo.innerHTML = formatHeaderContent(cleaned);
+    if ("MathJax" in window) {
+        const mathJax = window.MathJax;
+        void mathJax?.typesetPromise?.([moreInfo]);
+    }
 }
-function highlightCode(code, language) {
+function formatHeaderContent(text) {
+    const lines = text
+        .split("\n")
+        .map(line => line.trim())
+        .filter(line => line.length > 0);
+    const html = [];
+    let i = 0;
+    while (i < lines.length) {
+        const line = lines[i];
+        if (line.endsWith(":")) {
+            const items = [];
+            let j = i + 1;
+            while (j < lines.length && lines[j].startsWith("- ")) {
+                items.push(`<li>${formatMath(lines[j].slice(2))}</li>`);
+                j++;
+            }
+            if (items.length > 0) {
+                html.push(`<h3>${escapeHTML(line.slice(0, -1))}</h3>`);
+                html.push(`<ul>${items.join("")}</ul>`);
+                i = j;
+                continue;
+            }
+        }
+        html.push(`<p>${formatMath(line)}</p>`);
+        i++;
+    }
+    return html.join("");
+}
+function formatMath(text) {
+    const escaped = escapeHTML(text);
+    return escaped
+        .replace(/O\(([^)]+)\)/g, (_, expr) => `\\(O(${expr})\\)`);
+}
+export function highlightCode(code, language) {
     const keywords = new Set([
         "for", "while", "if", "else", "return",
         "def", "class", "public", "private",
@@ -154,18 +245,14 @@ function escapeHTML(text) {
         .replace(/</g, "&lt;")
         .replace(/>/g, "&gt;");
 }
-function initCopyButton() {
-    const copyBtn = document.getElementById("copyCodeBtn");
-    const codeDisplay = document.getElementById("codeDisplay");
+function initCopyButton(root) {
+    const copyBtn = root.querySelector(".copy-code-btn");
+    const codeDisplay = root.querySelector(".code-display-target");
     if (!copyBtn || !codeDisplay)
         return;
     copyBtn.addEventListener("click", async () => {
-        const text = codeDisplay.innerText;
-        await navigator.clipboard.writeText(text);
-        const tooltip = copyBtn.querySelector(".tooltip");
-        tooltip.setAttribute("data-text-initial", "Copied!");
-        setTimeout(() => {
-            tooltip.setAttribute("data-text-initial", "Copy to clipboard");
-        }, 1500);
+        const text = codeDisplay.innerText || codeDisplay.textContent || "";
+        await copyText(text);
+        showCopySuccess(copyBtn);
     });
 }
