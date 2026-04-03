@@ -1,18 +1,43 @@
 import { Graph } from "./visualizer/graph.js";
 import { Controller } from "./visualizer/controller.js";
 import { generateUniqueRandomArray } from "./visualizer/randomArray.js";
-import { bubbleSort } from "./algorithms/bubble.js";
+import { bitonicSort } from "./algorithms/bitonic.js";
 import { initLearnMore } from "../ui/navigation.js";
 import { initCodeLoader } from "../ui/codeLoader.js";
+import { WorkspaceState } from "./visualizer/types.js";
+
+function nextPowerOfTwo(n: number): number {
+    return 1 << Math.ceil(Math.log2(Math.max(1, n)));
+}
+
+function createInitialWorkspace(dataset: number[]): WorkspaceState {
+    const targetLength = nextPowerOfTwo(dataset.length);
+
+    return {
+        title: "Algorithm Workspace",
+        detail: "Bitonic Sort will build opposite-direction blocks, then merge them through a fixed comparison network",
+        rows: [
+            { label: "Active Block", values: [...dataset] },
+            { label: "Compare Pair", values: [null, null] },
+            {
+                label: "Network View",
+                values: [
+                    ...dataset,
+                    ...new Array<number | null>(Math.max(targetLength - dataset.length, 0)).fill(null)
+                ]
+            }
+        ]
+    };
+}
 
 document.addEventListener("DOMContentLoaded", () => {
     initLearnMore();
-    initCodeLoader("sorting", "bubble_sort", {
+    initCodeLoader("sorting", "bitonic_sort", {
         rootSelector: "#standardCodeSection",
         variant: "standard",
         defaultLanguage: "python"
     });
-    initCodeLoader("sorting", "bubble_sort", {
+    initCodeLoader("sorting", "bitonic_sort", {
         rootSelector: "#walkthroughCodeSection",
         variant: "walkthrough",
         defaultLanguage: "python",
@@ -21,11 +46,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const graph = new Graph("graphContainer");
 
-    let dataset: number[] = generateRandomArray(20);
-    let generator = bubbleSort(dataset);
+    let dataset: number[] = generateRandomArray(16);
+    let generator = bitonicSort(dataset);
     let controller = new Controller(generator, graph);
 
-    graph.render(dataset);
+    graph.render(dataset, [], "default", createInitialWorkspace(dataset));
 
     const datasetInput = document.getElementById("datasetInput") as HTMLInputElement;
     const generateBtn = document.getElementById("generateBtn") as HTMLButtonElement;
@@ -35,8 +60,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const resetBtn = document.getElementById("resetBtn") as HTMLButtonElement;
     const speedRange = document.getElementById("speedRange") as HTMLInputElement;
 
+    datasetInput.value = dataset.join(",");
+
     generateBtn.addEventListener("click", () => {
-        dataset = generateRandomArray(20);
+        dataset = generateRandomArray(16);
         datasetInput.value = dataset.join(",");
         reset();
     });
@@ -44,11 +71,12 @@ document.addEventListener("DOMContentLoaded", () => {
     datasetInput.addEventListener("change", () => {
         const values = datasetInput.value
             .split(",")
-            .map(v => Number(v.trim()))
-            .filter(v => !isNaN(v));
+            .map(value => Number(value.trim()))
+            .filter(value => !Number.isNaN(value));
 
         if (values.length > 0) {
             dataset = values;
+            datasetInput.value = dataset.join(",");
             reset();
         }
     });
@@ -63,8 +91,9 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     function reset() {
-        generator = bubbleSort(dataset);
+        generator = bitonicSort(dataset);
         controller.reset(generator, dataset);
+        graph.render(dataset, [], "default", createInitialWorkspace(dataset));
     }
 
     function generateRandomArray(size: number): number[] {

@@ -1,18 +1,31 @@
 import { Graph } from "./visualizer/graph.js";
 import { Controller } from "./visualizer/controller.js";
 import { generateUniqueRandomArray } from "./visualizer/randomArray.js";
-import { bubbleSort } from "./algorithms/bubble.js";
+import { quickSort } from "./algorithms/quick.js";
 import { initLearnMore } from "../ui/navigation.js";
 import { initCodeLoader } from "../ui/codeLoader.js";
+import { WorkspaceState } from "./visualizer/types.js";
+
+function createInitialWorkspace(dataset: number[]): WorkspaceState {
+    return {
+        title: "Algorithm Workspace",
+        detail: "Quick Sort will choose a pivot, partition the active range, and recurse on the left and right sides",
+        rows: [
+            { label: "Partition Range", values: dataset.length > 0 ? [...dataset] : [] },
+            { label: "Pivot", values: [null] },
+            { label: "Full Array", values: dataset.length > 0 ? [...dataset] : [] }
+        ]
+    };
+}
 
 document.addEventListener("DOMContentLoaded", () => {
     initLearnMore();
-    initCodeLoader("sorting", "bubble_sort", {
+    initCodeLoader("sorting", "quick_sort", {
         rootSelector: "#standardCodeSection",
         variant: "standard",
         defaultLanguage: "python"
     });
-    initCodeLoader("sorting", "bubble_sort", {
+    initCodeLoader("sorting", "quick_sort", {
         rootSelector: "#walkthroughCodeSection",
         variant: "walkthrough",
         defaultLanguage: "python",
@@ -22,10 +35,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const graph = new Graph("graphContainer");
 
     let dataset: number[] = generateRandomArray(20);
-    let generator = bubbleSort(dataset);
+    let generator = quickSort(dataset);
     let controller = new Controller(generator, graph);
 
-    graph.render(dataset);
+    graph.render(dataset, [], "default", createInitialWorkspace(dataset));
 
     const datasetInput = document.getElementById("datasetInput") as HTMLInputElement;
     const generateBtn = document.getElementById("generateBtn") as HTMLButtonElement;
@@ -63,8 +76,9 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     function reset() {
-        generator = bubbleSort(dataset);
+        generator = quickSort(dataset);
         controller.reset(generator, dataset);
+        graph.render(dataset, [], "default", createInitialWorkspace(dataset));
     }
 
     function generateRandomArray(size: number): number[] {

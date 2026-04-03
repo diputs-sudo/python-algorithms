@@ -11,7 +11,10 @@ export function* bubbleSort(input: number[]): Generator<Step> {
             yield {
                 type: "compare",
                 indices: [j, j + 1],
-                array: [...arr]
+                array: [...arr],
+                memoryUsed: 0,
+                memoryLabel: "Memory",
+                memoryUnit: "items"
             };
 
             if (arr[j] > arr[j + 1]) {
@@ -20,7 +23,10 @@ export function* bubbleSort(input: number[]): Generator<Step> {
                 yield {
                     type: "swap",
                     indices: [j, j + 1],
-                    array: [...arr]
+                    array: [...arr],
+                    memoryUsed: 0,
+                    memoryLabel: "Memory",
+                    memoryUnit: "items"
                 };
             }
         }
@@ -28,6 +34,9 @@ export function* bubbleSort(input: number[]): Generator<Step> {
 
     yield {
         type: "done",
-        array: [...arr]
+        array: [...arr],
+        memoryUsed: 0,
+        memoryLabel: "Memory",
+        memoryUnit: "items"
     };
 }

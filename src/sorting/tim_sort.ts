@@ -1,18 +1,30 @@
 import { Graph } from "./visualizer/graph.js";
 import { Controller } from "./visualizer/controller.js";
 import { generateUniqueRandomArray } from "./visualizer/randomArray.js";
-import { bubbleSort } from "./algorithms/bubble.js";
+import { timSort } from "./algorithms/tim.js";
 import { initLearnMore } from "../ui/navigation.js";
 import { initCodeLoader } from "../ui/codeLoader.js";
+import { WorkspaceState } from "./visualizer/types.js";
+
+function createInitialWorkspace(dataset: number[]): WorkspaceState {
+    return {
+        title: "Algorithm Workspace",
+        detail: "Tim Sort will sort small runs first, then merge those runs into larger sorted blocks",
+        rows: [
+            { label: "Run 0", values: new Array(Math.min(5, dataset.length)).fill(null) },
+            { label: "Merged", values: new Array(dataset.length).fill(null) }
+        ]
+    };
+}
 
 document.addEventListener("DOMContentLoaded", () => {
     initLearnMore();
-    initCodeLoader("sorting", "bubble_sort", {
+    initCodeLoader("sorting", "tim_sort", {
         rootSelector: "#standardCodeSection",
         variant: "standard",
         defaultLanguage: "python"
     });
-    initCodeLoader("sorting", "bubble_sort", {
+    initCodeLoader("sorting", "tim_sort", {
         rootSelector: "#walkthroughCodeSection",
         variant: "walkthrough",
         defaultLanguage: "python",
@@ -22,10 +34,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const graph = new Graph("graphContainer");
 
     let dataset: number[] = generateRandomArray(20);
-    let generator = bubbleSort(dataset);
+    let generator = timSort(dataset);
     let controller = new Controller(generator, graph);
 
-    graph.render(dataset);
+    graph.render(dataset, [], "default", createInitialWorkspace(dataset));
 
     const datasetInput = document.getElementById("datasetInput") as HTMLInputElement;
     const generateBtn = document.getElementById("generateBtn") as HTMLButtonElement;
@@ -34,6 +46,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const stepBtn = document.getElementById("stepBtn") as HTMLButtonElement;
     const resetBtn = document.getElementById("resetBtn") as HTMLButtonElement;
     const speedRange = document.getElementById("speedRange") as HTMLInputElement;
+
+    datasetInput.value = dataset.join(",");
 
     generateBtn.addEventListener("click", () => {
         dataset = generateRandomArray(20);
@@ -44,11 +58,12 @@ document.addEventListener("DOMContentLoaded", () => {
     datasetInput.addEventListener("change", () => {
         const values = datasetInput.value
             .split(",")
-            .map(v => Number(v.trim()))
-            .filter(v => !isNaN(v));
+            .map(value => Number(value.trim()))
+            .filter(value => !Number.isNaN(value));
 
         if (values.length > 0) {
             dataset = values;
+            datasetInput.value = dataset.join(",");
             reset();
         }
     });
@@ -63,8 +78,9 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     function reset() {
-        generator = bubbleSort(dataset);
+        generator = timSort(dataset);
         controller.reset(generator, dataset);
+        graph.render(dataset, [], "default", createInitialWorkspace(dataset));
     }
 
     function generateRandomArray(size: number): number[] {

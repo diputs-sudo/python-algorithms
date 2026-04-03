@@ -1,18 +1,18 @@
 import { Graph } from "./visualizer/graph.js";
 import { Controller } from "./visualizer/controller.js";
 import { generateUniqueRandomArray } from "./visualizer/randomArray.js";
-import { bubbleSort } from "./algorithms/bubble.js";
+import { insertionSort } from "./algorithms/insertion.js";
 import { initLearnMore } from "../ui/navigation.js";
 import { initCodeLoader } from "../ui/codeLoader.js";
 
 document.addEventListener("DOMContentLoaded", () => {
     initLearnMore();
-    initCodeLoader("sorting", "bubble_sort", {
+    initCodeLoader("sorting", "insertion_sort", {
         rootSelector: "#standardCodeSection",
         variant: "standard",
         defaultLanguage: "python"
     });
-    initCodeLoader("sorting", "bubble_sort", {
+    initCodeLoader("sorting", "insertion_sort", {
         rootSelector: "#walkthroughCodeSection",
         variant: "walkthrough",
         defaultLanguage: "python",
@@ -22,7 +22,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const graph = new Graph("graphContainer");
 
     let dataset: number[] = generateRandomArray(20);
-    let generator = bubbleSort(dataset);
+    let generator = insertionSort(dataset);
     let controller = new Controller(generator, graph);
 
     graph.render(dataset);
@@ -35,6 +35,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const resetBtn = document.getElementById("resetBtn") as HTMLButtonElement;
     const speedRange = document.getElementById("speedRange") as HTMLInputElement;
 
+    datasetInput.value = dataset.join(",");
+
     generateBtn.addEventListener("click", () => {
         dataset = generateRandomArray(20);
         datasetInput.value = dataset.join(",");
@@ -44,11 +46,12 @@ document.addEventListener("DOMContentLoaded", () => {
     datasetInput.addEventListener("change", () => {
         const values = datasetInput.value
             .split(",")
-            .map(v => Number(v.trim()))
-            .filter(v => !isNaN(v));
+            .map(value => Number(value.trim()))
+            .filter(value => !Number.isNaN(value));
 
         if (values.length > 0) {
             dataset = values;
+            datasetInput.value = dataset.join(",");
             reset();
         }
     });
@@ -63,7 +66,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     function reset() {
-        generator = bubbleSort(dataset);
+        generator = insertionSort(dataset);
         controller.reset(generator, dataset);
     }
 
