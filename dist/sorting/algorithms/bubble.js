@@ -6,20 +6,29 @@ export function* bubbleSort(input) {
             yield {
                 type: "compare",
                 indices: [j, j + 1],
-                array: [...arr]
+                array: [...arr],
+                memoryUsed: 0,
+                memoryLabel: "Memory",
+                memoryUnit: "items"
             };
             if (arr[j] > arr[j + 1]) {
                 [arr[j], arr[j + 1]] = [arr[j + 1], arr[j]];
                 yield {
                     type: "swap",
                     indices: [j, j + 1],
-                    array: [...arr]
+                    array: [...arr],
+                    memoryUsed: 0,
+                    memoryLabel: "Memory",
+                    memoryUnit: "items"
                 };
             }
         }
     }
     yield {
         type: "done",
-        array: [...arr]
+        array: [...arr],
+        memoryUsed: 0,
+        memoryLabel: "Memory",
+        memoryUnit: "items"
     };
 }
