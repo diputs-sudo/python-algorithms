@@ -868,10 +868,17 @@ select {
 .home-graph.visualizer-container {
   --visualizer-gap: 6px;
   --visualizer-padding: 0.9rem;
-  min-height: 160px;
-  height: 160px;
+  min-height: 200px;
+  height: 200px;
+  overflow: hidden;
   border-radius: 18px;
   background: #0b0e14;
+}
+
+.home-graph.visualizer-container .visualizer-bars {
+  flex: 1 1 auto;
+  min-height: 0;
+  height: 100%;
 }
 
 .home-rail {
@@ -1811,8 +1818,8 @@ header p {
   }
 
   .home-graph.visualizer-container {
-    min-height: 136px;
-    height: 136px;
+    min-height: 168px;
+    height: 168px;
   }
 
   .home-panel {
