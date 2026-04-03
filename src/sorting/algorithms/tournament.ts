@@ -57,7 +57,7 @@ export function* tournamentSort(input: number[]): Generator<Step> {
         return tree.slice(1);
     }
 
-    function* updateTree(index: number): Generator<Step> {
+    function* updateTree(index: number, outputIndex: number, sourceIndex: number): Generator<Step> {
         let current = Math.floor(index / 2);
 
         while (current >= 1) {
@@ -69,6 +69,7 @@ export function* tournamentSort(input: number[]): Generator<Step> {
 
             yield {
                 type: "compare",
+                indices: sourceIndex === outputIndex ? [outputIndex] : [outputIndex, sourceIndex],
                 array: display.map((value, displayIndex) => value ?? arr[displayIndex]) as number[],
                 memoryUsed: tree.length - 1,
                 memoryLabel: "Memory",
@@ -94,9 +95,11 @@ export function* tournamentSort(input: number[]): Generator<Step> {
 
         display[outputIndex] = winner;
 
+        const sourceIndex = currentLeafIndex(tree, offset, winner, n);
+
         yield {
             type: "swap",
-            indices: [outputIndex],
+            indices: sourceIndex === outputIndex ? [outputIndex] : [outputIndex, sourceIndex],
             array: display.map((value, displayIndex) => value ?? arr[displayIndex]) as number[],
             memoryUsed: tree.length - 1,
             memoryLabel: "Memory",
@@ -109,15 +112,10 @@ export function* tournamentSort(input: number[]): Generator<Step> {
             )
         };
 
-        let current = 1;
-        while (current < offset) {
-            const left = 2 * current;
-            const right = 2 * current + 1;
-            current = tree[left] === winner ? left : right;
-        }
+        let current = sourceIndex + offset;
 
         tree[current] = null;
-        yield* updateTree(current);
+        yield* updateTree(current, outputIndex, sourceIndex);
     }
 
     yield {
@@ -132,4 +130,21 @@ export function* tournamentSort(input: number[]): Generator<Step> {
             "All winners have been extracted from the tournament tree"
         )
     };
+}
+
+function currentLeafIndex(
+    tree: Array<number | null>,
+    offset: number,
+    winner: number,
+    length: number
+): number {
+    let current = 1;
+
+    while (current < offset) {
+        const left = 2 * current;
+        const right = 2 * current + 1;
+        current = tree[left] === winner ? left : right;
+    }
+
+    return Math.min(current - offset, Math.max(length - 1, 0));
 }
