@@ -30,6 +30,7 @@ document.addEventListener("DOMContentLoaded", () => {
     function runLoop() {
         clearTimers();
         generator = bubbleSort(dataset);
+        graph.resetStepCount();
         graph.render(dataset);
 
         timerId = window.setInterval(() => {
@@ -42,6 +43,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 return;
             }
 
+            graph.incrementStepCount();
             graph.render(
                 result.value.array,
                 result.value.indices,
