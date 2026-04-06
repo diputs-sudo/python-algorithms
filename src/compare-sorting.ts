@@ -67,7 +67,7 @@ const algorithmInfo: Record<AlgorithmKey, AlgorithmInfo> = {
     bitonic_sort: {
         title: "Bitonic Sort",
         summary: "A comparison network that shines in parallel settings and works best when the structure of comparisons is fixed ahead of time.",
-        href: "sorting/bitonic_sort.html",
+        href: "bitonic_sort.html",
         tags: ["Avg: \\(O(n \\log^2 n)\\)", "Parallel-Friendly", "Advanced"],
         details: [
             "Memory usage: about \\(O(\\log n)\\) stack in this recursive visualizer",
@@ -78,7 +78,7 @@ const algorithmInfo: Record<AlgorithmKey, AlgorithmInfo> = {
     bubble_sort: {
         title: "Bubble Sort",
         summary: "A simple adjacent-swap algorithm that is easy to understand but inefficient on larger inputs.",
-        href: "sorting/bubble_sort.html",
+        href: "bubble_sort.html",
         tags: ["Best: \\(O(n)\\)", "Avg: \\(O(n^2)\\)", "Stable"],
         details: [
             "Memory usage: \\(O(1)\\)",
@@ -89,7 +89,7 @@ const algorithmInfo: Record<AlgorithmKey, AlgorithmInfo> = {
     bucket_sort: {
         title: "Bucket Sort",
         summary: "Groups values into buckets first, then sorts within each bucket for near-linear performance on suitable data.",
-        href: "sorting/bucket_sort.html",
+        href: "bucket_sort.html",
         tags: ["Expected: near \\(O(n)\\)", "\\(O(n + k)\\) Memory", "Distribution-Based"],
         details: [
             "Best for: values spread fairly evenly across a known range",
@@ -100,7 +100,7 @@ const algorithmInfo: Record<AlgorithmKey, AlgorithmInfo> = {
     counting_sort: {
         title: "Counting Sort",
         summary: "A non-comparative integer sort that uses frequencies instead of pairwise comparisons.",
-        href: "sorting/counting_sort.html",
+        href: "counting_sort.html",
         tags: ["\\(O(n + k)\\) Time", "\\(O(n + k)\\) Memory", "Stable"],
         details: [
             "Best for: non-negative integers with a reasonably small range",
@@ -112,7 +112,7 @@ const algorithmInfo: Record<AlgorithmKey, AlgorithmInfo> = {
     heap_sort: {
         title: "Heap Sort",
         summary: "Turns the array into a heap to guarantee \\(O(n \\log n)\\) time while staying in place.",
-        href: "sorting/heap_sort.html",
+        href: "heap_sort.html",
         tags: ["\\(O(n \\log n)\\)", "\\(O(1)\\) Extra Space", "In-Place"],
         details: [
             "Best for: guaranteed comparison-sort performance with low extra memory",
@@ -123,7 +123,7 @@ const algorithmInfo: Record<AlgorithmKey, AlgorithmInfo> = {
     insertion_sort: {
         title: "Insertion Sort",
         summary: "Builds the sorted portion one item at a time and works especially well on small or nearly sorted data.",
-        href: "sorting/insertion_sort.html",
+        href: "insertion_sort.html",
         tags: ["Best: \\(O(n)\\)", "Avg: \\(O(n^2)\\)", "Stable"],
         details: [
             "Memory usage: \\(O(1)\\)",
@@ -134,7 +134,7 @@ const algorithmInfo: Record<AlgorithmKey, AlgorithmInfo> = {
     intro_sort: {
         title: "Intro Sort",
         summary: "Starts as quick sort and switches strategies when needed to avoid worst-case performance.",
-        href: "sorting/intro_sort.html",
+        href: "intro_sort.html",
         tags: ["Avg: \\(O(n \\log n)\\)", "Hybrid", "In-Place"],
         details: [
             "Worst case: capped at \\(O(n \\log n)\\) by falling back to heap sort",
@@ -145,7 +145,7 @@ const algorithmInfo: Record<AlgorithmKey, AlgorithmInfo> = {
     merge_sort: {
         title: "Merge Sort",
         summary: "Recursively splits the array and merges sorted halves for reliable \\(O(n \\log n)\\) performance.",
-        href: "sorting/merge_sort.html",
+        href: "merge_sort.html",
         tags: ["\\(O(n \\log n)\\)", "\\(O(n)\\) Memory", "Stable"],
         details: [
             "Best for: stable sorting and predictable performance",
@@ -156,7 +156,7 @@ const algorithmInfo: Record<AlgorithmKey, AlgorithmInfo> = {
     merge_sort_inplace: {
         title: "Merge Sort In-Place",
         summary: "A memory-optimized merge variant that trades implementation simplicity for in-place behavior.",
-        href: "sorting/merge_sort_inplace.html",
+        href: "merge_sort_inplace.html",
         tags: ["\\(O(n \\log n)\\)", "\\(O(1)\\) Extra Space", "Advanced"],
         details: [
             "Best for: studying how merging can be done without a full helper array",
@@ -168,7 +168,7 @@ const algorithmInfo: Record<AlgorithmKey, AlgorithmInfo> = {
     quick_sort: {
         title: "Quick Sort",
         summary: "One of the fastest practical comparison sorts, built around partitioning by a pivot.",
-        href: "sorting/quick_sort.html",
+        href: "quick_sort.html",
         tags: ["Avg: \\(O(n \\log n)\\)", "\\(O(\\log n)\\) Memory", "In-Place"],
         details: [
             "Worst case: \\(O(n^2)\\)",
@@ -179,7 +179,7 @@ const algorithmInfo: Record<AlgorithmKey, AlgorithmInfo> = {
     radix_sort: {
         title: "Radix Sort",
         summary: "Sorts by individual digits instead of direct comparisons, making it powerful on fixed-format numeric data.",
-        href: "sorting/radix_sort.html",
+        href: "radix_sort.html",
         tags: ["\\(O(d(n + k))\\)", "\\(O(n + k)\\) Memory", "Stable by Pass"],
         details: [
             "Best for: non-negative integers with a bounded digit structure",
@@ -191,7 +191,7 @@ const algorithmInfo: Record<AlgorithmKey, AlgorithmInfo> = {
     selection_sort: {
         title: "Selection Sort",
         summary: "Repeatedly selects the next smallest value, minimizing writes but not comparisons.",
-        href: "sorting/selection_sort.html",
+        href: "selection_sort.html",
         tags: ["\\(O(n^2)\\)", "\\(O(1)\\) Memory", "Few Writes"],
         details: [
             "Best for: simple scenarios where write count matters more than comparison count",
@@ -202,7 +202,7 @@ const algorithmInfo: Record<AlgorithmKey, AlgorithmInfo> = {
     shell_sort: {
         title: "Shell Sort",
         summary: "Improves insertion sort by comparing elements across shrinking gaps before the final pass.",
-        href: "sorting/shell_sort.html",
+        href: "shell_sort.html",
         tags: ["Gap-Based", "\\(O(1)\\) Memory", "In-Place"],
         details: [
             "Best for: medium-size inputs when you want something between insertion and \\(O(n \\log n)\\) sorts",
@@ -213,7 +213,7 @@ const algorithmInfo: Record<AlgorithmKey, AlgorithmInfo> = {
     tim_sort: {
         title: "Tim Sort",
         summary: "A production-style hybrid sort that exploits natural runs and uses merge-like behavior underneath.",
-        href: "sorting/tim_sort.html",
+        href: "tim_sort.html",
         tags: ["\\(O(n \\log n)\\)", "Stable", "Hybrid"],
         details: [
             "Best for: real-world data that often contains existing ordered runs",
@@ -224,7 +224,7 @@ const algorithmInfo: Record<AlgorithmKey, AlgorithmInfo> = {
     tournament_sort: {
         title: "Tournament Sort",
         summary: "Uses a tournament tree to repeatedly surface the next smallest element from a structured bracket.",
-        href: "sorting/tournament_sort.html",
+        href: "tournament_sort.html",
         tags: ["\\(O(n \\log n)\\)", "Tree-Based", "Extra Memory"],
         details: [
             "Best for: learning tree-based selection and repeated winner extraction",
@@ -303,7 +303,7 @@ async function loadCode(slot: CompareSlot) {
     const extension = extensions[slot.language];
     const fileName = getCodeBaseName(slot.algorithm, slot.language);
     const path = new URL(
-        `../${slot.language}/sorting/standard/${fileName}.${extension}`,
+        `../../${slot.language}/sorting/standard/${fileName}.${extension}`,
         window.location.href
     ).href;
 
