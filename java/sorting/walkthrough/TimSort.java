@@ -92,8 +92,6 @@ public class TimSort {
         return new MergeResult(merged, step);
     }
 
-    // ================= TIM SORT VERBOSE =================
-
     public static int[] timSortVerbose(int[] arr) {
 
         int[] a = Arrays.copyOf(arr, arr.length);
